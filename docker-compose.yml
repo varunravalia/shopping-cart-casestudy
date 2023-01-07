@@ -1,0 +1,75 @@
+# version: '3.7'
+
+# services:
+
+#   react-client:
+
+#     image: react-app
+
+#     build: ./client
+
+#     stdin_open: true
+
+#     ports:
+
+#       - "3000:3000"
+
+#     volumes:
+
+#       - ./client:/app
+
+#       - ./app/node_modules
+
+#   server:
+
+#     image: api-server
+
+#     build: ./server
+
+#     ports:
+
+#       - "3001:3001"
+
+#     volumes:
+
+#       - ./server:/app
+
+#       - ./app/node_modules
+
+
+#       #...........
+   
+version: '3.7'
+services:
+  ms_core_api:
+    container_name: ms_core_api
+    build: ./server/
+    image: backend
+    volumes:
+      - ./server:/app
+      - ./server/package.json:/package.json'
+      - /app/node_modules
+    ports:
+      - 3001:3001
+    networks:
+      - ms_network
+  ms_client_ui:
+    container_name: ms_client_ui
+    build: ./client/
+    image: client
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./client/:/app
+      - /app/node_modules
+    ports:
+      - 3000:3000
+    depends_on:
+      - ms_core_api
+    networks:
+      - ms_network     
+networks:
+  ms_network:
+    driver: bridge
+    name: ms_network
+
